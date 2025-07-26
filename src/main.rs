@@ -30,8 +30,10 @@ async fn main () -> std::io::Result<()>{
                 web::scope("/rn")
                 .route("/", web::get().to(roots))
                 .route("/next", web::get().to(nest))
+                
            
             )
+         
             .app_data(web::Data::new(AppState {
                 app_name:String::from("Hello")
             }))
