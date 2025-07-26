@@ -7,16 +7,15 @@ async fn index()->impl Responder{
 struct AppState{
     app_name :String
 }
-struct AppStateCounter {
-    counter: Mutex<i32>
-}
 
-async fn count(counts: web::Data<AppStateCounter>) -> String {
-    let mut counter =  counts.counter.lock().unwrap();
-    *counter+=1;
-    format!("{counter}")
 
+async fn roots()->impl Responder{
+    HttpResponse::Ok().body("Rooted")
 }
+ async  fn nest()-> impl Responder{
+    HttpResponse::Ok().body("Nested")
+ }
+
 
 #[actix_web::main]
 
@@ -28,14 +27,16 @@ async fn main () -> std::io::Result<()>{
     HttpServer::new(
         ||{
             App::new().service(
-                web::scope("/app")
-            .route("/index.html", web::get().to(index))
+                web::scope("/rn")
+                .route("/", web::get().to(roots))
+                .route("/next", web::get().to(nest))
+                
            
             )
+         
             .app_data(web::Data::new(AppState {
                 app_name:String::from("Hello")
             }))
-            .app_data(count.clone())
             .service(data)
             .service(hello)
             .service(echo)
