@@ -1,0 +1,1 @@
+Result<HttpServer<{closure@src\main.rs:14:9: 14:15}, App<impl ServiceFactory<ServiceRequest, Config = (), Response = ServiceResponse<_>, Error = actix_web::Error, InitError = ()>>, actix_web::app_service::AppInit<impl ServiceFactory<ServiceRequest, Config = (), Response = ServiceResponse<_>, Error = actix_web::Error, InitError = ()>, _>, _>, std::io::Error>
