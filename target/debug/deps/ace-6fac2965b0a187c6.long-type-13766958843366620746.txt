@@ -1,0 +1,1 @@
+fn(actix_web::types::path::Path<blogs>) -> impl future::future::Future<Output = impl Responder> {blogs}

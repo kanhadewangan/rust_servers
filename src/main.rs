@@ -1,8 +1,6 @@
-#[allow(unused)]
 
 use serde::Deserialize;
-use actix_web::{cookie::time::Duration, get, post, web::{self, to, Json}, App, HttpResponse, HttpServer, Responder};
-use std::{path, string, sync::Mutex};
+use actix_web::{ delete, get, post, put, web::{self}, App, HttpResponse, HttpServer, Responder};
 
 
 #[derive(serde::Deserialize)]
@@ -10,9 +8,7 @@ struct Info{
     name:String,
     city:String
 }
-async fn index()->impl Responder{
-    "hello Wrold"
-}
+
 struct AppState{
     app_name :String
 }
@@ -64,6 +60,10 @@ async fn main () -> std::io::Result<()>{
             .service(data)
             .service(hello)
             .service(echo)
+            .service(create)
+            .service(put)
+            .service(delete)
+            .service(health)
             .route("/", web::get().to(manual_hello))
             
         }
@@ -76,6 +76,14 @@ async fn main () -> std::io::Result<()>{
 
 async fn greet(path: web::Path<Info>) -> impl Responder {
     format!("Hello, {} from {}!", path.name, path.city)
+}
+
+#[derive(Deserialize)]
+#[allow(unused_variables)]
+struct Blog{
+    id:String,
+    username:String,
+    blogs:String
 }
 
 #[get("/")]
@@ -91,7 +99,31 @@ async fn data(data:web::Data<AppState>)->String{
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
 }
+// Json data Parse
+#[post("/blogs")]
+async fn create(blog:web::Json<Blog>)->impl Responder{
+    let blog = blog.into_inner();
+    HttpResponse::Ok().json(format!("Recived blogs:  /n {} /n{}" , blog.id , blog.blogs))
+}
+#[put("/blogs")]
+async fn put(blog:web::Json<Blog>)-> impl Responder{
+    let blogs = blog.into_inner();
+    format!("{} {} {}", blogs.id , blogs.username , blogs.blogs)
+}
+#[delete("/blog")]
+async fn delete()-> impl Responder{
+    HttpResponse::Ok().json("Delete SucessFully ")
 
+}
+#[derive(Deserialize)]
+struct  Infom{
+    name:String
+}
+// Query Params
+#[get("/que")]
+async  fn health(info:web::Query<Infom>)-> impl Responder{
+    format!(" Hello from Query {}", info.name )
+}
 async fn manual_hello()  -> impl Responder{
     HttpResponse::Ok().body("hello from Mmam")
 }
