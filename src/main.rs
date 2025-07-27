@@ -1,97 +1,47 @@
-#[allow(unused)]
-
+use actix_web::{post, web::{self, Data, Json}, HttpResponse, Responder , HttpServer  , App};
+use sqlx::PgPool;
 use serde::Deserialize;
-use actix_web::{cookie::time::Duration, get, post, web::{self, to, Json}, App, HttpResponse, HttpServer, Responder};
-use std::{path, string, sync::Mutex};
-
-
-#[derive(serde::Deserialize)]
-struct Info{
-    name:String,
-    city:String
-}
-async fn index()->impl Responder{
-    "hello Wrold"
-}
-struct AppState{
-    app_name :String
-}
-// Josn
- #[derive(Deserialize)]
- struct PostData{
-    id :String,
-    name :String,
-    city: String
- }
-async fn post_req(path: web::Path<PostData>)-> impl Responder{
-    format!(" id :{}  name: {}  city:{}", path.id , path.name , path.city )
+use dotenv::dotenv;
+use std::env;
+#[derive(Deserialize)]
+struct Blogs {
+    title: String,
+    content: String,
 }
 
+#[post("/blog")]
+async fn create_blog(blog: Json<Blogs>, db_pool: Data<PgPool>) -> impl Responder {
+    let result = sqlx::query!(
+        "INSERT INTO blogs (title, content) VALUES ($1, $2)",
+        blog.title,
+        blog.content
+    )
+    .execute(db_pool.get_ref())
+    .await;
 
-
-async fn roots()->impl Responder{
-    HttpResponse::Ok().body("Rooted")
+    match result {
+        Ok(_) => HttpResponse::Ok().body("Blog created successfully"),
+        Err(e) => {
+            eprintln!("DB error: {}", e);
+            HttpResponse::InternalServerError().body("DB insert failed")
+        }
+    }
 }
- async  fn nest()-> impl Responder{
-    HttpResponse::Ok().body("Nested")
- }
-
 
 #[actix_web::main]
-
 async fn main () -> std::io::Result<()>{
-    
-    std::env::set_var("RUST_LOG", "debug");
-    std::env::set_var("RUST_BACKTRACE", "1");
-    env_logger::init();
+dotenv().ok();
+let db_urls = env::var("DATABASE_URL").expect("Seted");
+let pool = PgPool::connect(&db_urls).await.expect("failed");
+
     HttpServer::new(
-        ||{
-            App::new().service(
-                web::scope("/rn")
-                .route("/", web::get().to(roots))
-                .route("/next", web::get().to(nest))
-                
-           
-            )
-            .route("/user/{id}/{name}/{city}", 
-        web::post().to(post_req)
-            )
-         
-            .app_data(web::Data::new(AppState {
-                app_name:String::from("Hello")
-            }))
-            .route("/hello/{name}/{city}", web::get().to(greet))
-            .service(data)
-            .service(hello)
-            .service(echo)
-            .route("/", web::get().to(manual_hello))
-            
+       move ||{
+            App::new()
+            .app_data(web::Data::new(pool.clone()))
+            .service(create_blog)
         }
     )
     .bind(("127.0.0.1",8080))?
     .run()
     .await
-}
-
-
-async fn greet(path: web::Path<Info>) -> impl Responder {
-    format!("Hello, {} from {}!", path.name, path.city)
-}
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
-}
-#[get("/name")]
-async fn data(data:web::Data<AppState>)->String{
-    let app_name = &data.app_name;
-    format!("hii {app_name}")
-}
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
-}
-
-async fn manual_hello()  -> impl Responder{
-    HttpResponse::Ok().body("hello from Mmam")
 }
