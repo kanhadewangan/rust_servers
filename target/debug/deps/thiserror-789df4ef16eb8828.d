@@ -1,0 +1,11 @@
+C:\Users\kanha\cms\rust\ace\target\debug\deps\thiserror-789df4ef16eb8828.d: C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\lib.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\aserror.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\display.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\provide.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\var.rs
+
+C:\Users\kanha\cms\rust\ace\target\debug\deps\libthiserror-789df4ef16eb8828.rlib: C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\lib.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\aserror.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\display.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\provide.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\var.rs
+
+C:\Users\kanha\cms\rust\ace\target\debug\deps\libthiserror-789df4ef16eb8828.rmeta: C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\lib.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\aserror.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\display.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\provide.rs C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\var.rs
+
+C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\lib.rs:
+C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\aserror.rs:
+C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\display.rs:
+C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\provide.rs:
+C:\Users\kanha\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\thiserror-2.0.12\src\var.rs:
