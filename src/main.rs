@@ -1,12 +1,32 @@
+#[allow(unused)]
 
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
-use std::sync::Mutex;
+use serde::Deserialize;
+use actix_web::{cookie::time::Duration, get, post, web::{self, to, Json}, App, HttpResponse, HttpServer, Responder};
+use std::{path, string, sync::Mutex};
+
+
+#[derive(serde::Deserialize)]
+struct Info{
+    name:String,
+    city:String
+}
 async fn index()->impl Responder{
     "hello Wrold"
 }
 struct AppState{
     app_name :String
 }
+// Josn
+ #[derive(Deserialize)]
+ struct PostData{
+    id :String,
+    name :String,
+    city: String
+ }
+async fn post_req(path: web::Path<PostData>)-> impl Responder{
+    format!(" id :{}  name: {}  city:{}", path.id , path.name , path.city )
+}
+
 
 
 async fn roots()->impl Responder{
@@ -33,10 +53,14 @@ async fn main () -> std::io::Result<()>{
                 
            
             )
+            .route("/user/{id}/{name}/{city}", 
+        web::post().to(post_req)
+            )
          
             .app_data(web::Data::new(AppState {
                 app_name:String::from("Hello")
             }))
+            .route("/hello/{name}/{city}", web::get().to(greet))
             .service(data)
             .service(hello)
             .service(echo)
@@ -47,10 +71,12 @@ async fn main () -> std::io::Result<()>{
     .bind(("127.0.0.1",8080))?
     .run()
     .await
-
 }
 
 
+async fn greet(path: web::Path<Info>) -> impl Responder {
+    format!("Hello, {} from {}!", path.name, path.city)
+}
 
 #[get("/")]
 async fn hello() -> impl Responder {
