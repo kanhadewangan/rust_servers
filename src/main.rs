@@ -1,47 +1,77 @@
-use actix_web::{post, web::{self, Data, Json}, HttpResponse, Responder , HttpServer  , App};
-use sqlx::PgPool;
-use serde::Deserialize;
-use dotenv::dotenv;
-use std::env;
-#[derive(Deserialize)]
-struct Blogs {
+use actix_web::{
+    body::BoxBody, http::header::ContentType, HttpRequest, HttpResponse, Responder,
+    web, App, HttpServer,};
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
+
+struct  MyStruct {
     title: String,
     content: String,
 }
 
-#[post("/blog")]
-async fn create_blog(blog: Json<Blogs>, db_pool: Data<PgPool>) -> impl Responder {
-    let result = sqlx::query!(
-        "INSERT INTO blogs (title, content) VALUES ($1, $2)",
-        blog.title,
-        blog.content
-    )
-    .execute(db_pool.get_ref())
-    .await;
+impl Responder for  MyStruct{
+    type Body = BoxBody;
 
-    match result {
-        Ok(_) => HttpResponse::Ok().body("Blog created successfully"),
-        Err(e) => {
-            eprintln!("DB error: {}", e);
-            HttpResponse::InternalServerError().body("DB insert failed")
-        }
+fn  respond_to(self, _req: &HttpRequest) -> HttpResponse<Self::Body> {
+    let body = serde_json::to_string(&self).unwrap();
+    HttpResponse::Ok()
+        .content_type(ContentType::json())
+        .body(body)
     }
 }
 
-#[actix_web::main]
-async fn main () -> std::io::Result<()>{
-dotenv().ok();
-let db_urls = env::var("DATABASE_URL").expect("Seted");
-let pool = PgPool::connect(&db_urls).await.expect("failed");
+async fn index() -> impl Responder {
+    let my_struct = MyStruct {
+        title: "Hello, World!".to_string(),
+        content: "This is a simple Actix-web application.".to_string(),
+    };
+    my_struct
+}
 
-    HttpServer::new(
-       move ||{
-            App::new()
-            .app_data(web::Data::new(pool.clone()))
-            .service(create_blog)
-        }
-    )
-    .bind(("127.0.0.1",8080))?
+async fn health_check() -> impl Responder {
+    HttpResponse::Ok().json("Service is running")
+
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .route("/", web::get().to(index))
+            .route("/health", web::get().to(health_check))
+    })
+    .bind("127.0.0.1:8080")?
     .run()
     .await
 }
+
+/// Test cases 
+#[cfg(test)]
+
+mod test{
+    use actix_web::{test, App, http::header::ContentType};
+    use actix_web::test::init_service;
+
+    use super::*;
+    #[actix_web::test]
+    async fn test_index() {
+        let mut app = test::init_service(App::new().route("/", web::get().to(index))).await;
+        let req = test::TestRequest::get().uri("/").to_request();
+        let resp: MyStruct = test::call_and_read_body_json(&mut app, req).await;
+        assert_eq!(resp.title, "Hello, World!");
+        assert_eq!(resp.content, "This is a simple Actix-web application.");  
+
+
+}
+
+#[actix_web::test]
+async fn test_health() {
+    let mut app = test::init_service(App::new().route("/health", web::get().to(health_check))).await;
+    let req = test::TestRequest::get().uri("/health").to_request();
+    let resp: String = test::call_and_read_body_json(&mut app, req).await;
+    assert_eq!(resp, "Service is running");
+
+}
+}
+  

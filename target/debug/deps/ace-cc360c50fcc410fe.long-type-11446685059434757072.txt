@@ -1,0 +1,2 @@
+fn(actix_web::web::Json<Blogs>) -> impl std::future::Future<Output = Result<HttpResponse, actix_web::Error>> {create_blogs}
+fn(actix_web::web::Json<Blogs>) -> impl std::future::Future<Output = Result<HttpResponse, actix_web::Error>> {create_blogs}: HttpServiceFactory
