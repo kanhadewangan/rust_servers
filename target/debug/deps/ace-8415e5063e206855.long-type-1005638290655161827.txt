@@ -1,0 +1,1 @@
+fn(_) -> actix_web::web::Bytes {<actix_web::web::Bytes as std::convert::From<_>>::from}: Responder

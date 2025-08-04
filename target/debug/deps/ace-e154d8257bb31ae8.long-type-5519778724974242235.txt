@@ -1,0 +1,2 @@
+middleware::from_fn::MiddlewareFn<fn({type error}) -> impl futures::Future<Output = ()> {hello}, _>
+middleware::from_fn::MiddlewareFn<fn({type error}) -> impl futures::Future<Output = ()> {hello}, _>: Transform<actix_web::app_service::AppRouting, ServiceRequest>
