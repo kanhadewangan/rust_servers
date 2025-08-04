@@ -1,0 +1,2 @@
+middleware::from_fn::MiddlewareFn<fn(ServiceRequest, actix_web::middleware::Next<_>) -> impl futures::Future<Output = ()> {hello::<_>}, _>
+middleware::from_fn::MiddlewareFn<fn(ServiceRequest, actix_web::middleware::Next<_>) -> impl futures::Future<Output = ()> {hello::<_>}, _>: Transform<actix_web::app_service::AppRouting, ServiceRequest>

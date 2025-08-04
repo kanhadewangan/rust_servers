@@ -1,0 +1,1 @@
+fn() -> impl futures::Future<Output = ()> {hello}: Transform<actix_web::app_service::AppRouting, ServiceRequest>
